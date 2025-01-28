@@ -6,7 +6,7 @@ import com.portfolio.backend.entity.Contact;
 import com.portfolio.backend.service.ContactService;
 
 @RestController
-@RequestMapping("/api/contact") // Endpoint URL to match the React frontend
+@RequestMapping("/api/contact") //Endpoint URL to match the React frontend
 public class ContactController {
 
     @Autowired
