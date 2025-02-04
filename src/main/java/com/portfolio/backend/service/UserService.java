@@ -29,7 +29,11 @@ public class UserService {
         User user = new User();
         user.setEmail(email);
         user.setPassword(hashedPassword);
-        userRepository.save(user);
+        try {
+            userRepository.save(user);
+        } catch (Exception e) {
+            return "Error occurred while saving user";
+        }
 
         return "User registered successfully";
     }
@@ -40,14 +44,14 @@ public class UserService {
         return user.isPresent() && passwordEncoder.matches(password, user.get().getPassword());
     }
 
-    // Delete a user by UUID and return boolean for success
+    // Delete a user by UUID
     public boolean deleteUser(UUID userId) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {
             userRepository.delete(user.get());
-            return true; // Success
+            return true;
         }
-        return false; // User not found
+        return false;
     }
 
     // Save a new user or update an existing one
@@ -55,18 +59,22 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    // Update an existing user (return the updated user)
+    // Update an existing user (with password hashing)
     public boolean updateUser(UUID userId, User updatedUser) {
         Optional<User> existingUser = userRepository.findById(userId);
         if (existingUser.isPresent()) {
             User user = existingUser.get();
-            // Update the fields of the existing user with the values from the updated user
             user.setEmail(updatedUser.getEmail());
-            user.setPassword(updatedUser.getPassword());  // You might want to hash the password here too
-            userRepository.save(user);  // Save and return the updated user
-            return true;  // Update successful
+
+            // Hash the password before saving it
+            if (updatedUser.getPassword() != null) {
+                user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+            }
+
+            userRepository.save(user);
+            return true;
         }
-        return false;  // User not found
+        return false;
     }
 
     // Get a user by email
@@ -74,10 +82,10 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-    // Get all users as a List (convert Iterable to List)
+    // Get all users as a List
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
-        userRepository.findAll().forEach(users::add); // Convert Iterable to List
+        userRepository.findAll().forEach(users::add);
         return users;
     }
 }
