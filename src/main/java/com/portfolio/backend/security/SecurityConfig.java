@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .anyRequest().permitAll()
             )
             .httpBasic(Customizer.withDefaults());
-            //.formLogin().disable();
+            
             
         return http.build();
     }

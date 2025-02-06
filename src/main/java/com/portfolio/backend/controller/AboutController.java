@@ -3,6 +3,8 @@ package com.portfolio.backend.controller;
 import org.springframework.web.bind.annotation.*;
 import com.portfolio.backend.entity.*;
 import com.portfolio.backend.repository.*;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -35,8 +37,9 @@ public class AboutController {
     }
 
     @PostMapping("/about")
-    public AboutMe createAboutMe(@RequestBody AboutMe aboutMe) {
-        return aboutMeRepository.save(aboutMe);
+    public ResponseEntity<String> createAboutMe(@RequestBody AboutMe aboutMe) {
+         aboutMeRepository.save(aboutMe);
+         return ResponseEntity.status(HttpStatus.CREATED).body("About created successfully.");
     }
 
     @PutMapping("/about/{id}")
@@ -53,12 +56,12 @@ public class AboutController {
     }
 
     @DeleteMapping("/about/{id}")
-    public ResponseEntity<Void> deleteAboutMe(@PathVariable UUID id) {
+    public ResponseEntity<String> deleteAboutMe(@PathVariable UUID id) {
         if (aboutMeRepository.existsById(id)) {
             aboutMeRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok("About deleted successfully.");
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: About not found.");
         }
     }
 
@@ -69,8 +72,9 @@ public class AboutController {
     }
 
     @PostMapping("/education")
-    public Education createEducation(@RequestBody Education education) {
-        return educationRepository.save(education);
+    public ResponseEntity<String> createEducation(@RequestBody Education education) {
+        educationRepository.save(education);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Education created successfully.");
     }
 
     @PutMapping("/education/{id}")
@@ -89,12 +93,12 @@ public class AboutController {
     }
 
     @DeleteMapping("/education/{id}")
-    public ResponseEntity<Void> deleteEducation(@PathVariable UUID id) {
+    public ResponseEntity<String> deleteEducation(@PathVariable UUID id) {
         if (educationRepository.existsById(id)) {
             educationRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok("Education deleted successfully.");
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: Education not found.");
         }
     }
 
@@ -105,9 +109,12 @@ public class AboutController {
     }
 
     @PostMapping("/skills")
-    public Skill createSkill(@RequestBody Skill skill) {
-        return skillRepository.save(skill);
-    }
+    public ResponseEntity<String> createSkill(@RequestBody Skill skill) {
+    skillRepository.save(skill);
+    return ResponseEntity.status(HttpStatus.CREATED).body("Skill created successfully.");
+}
+
+
 
     @PutMapping("/skills/{id}")
     public ResponseEntity<Skill> updateSkill(@PathVariable UUID id, @RequestBody Skill skillDetails) {
@@ -122,12 +129,12 @@ public class AboutController {
     }
 
     @DeleteMapping("/skills/{id}")
-    public ResponseEntity<Void> deleteSkill(@PathVariable UUID id) {
+    public ResponseEntity<String> deleteSkill(@PathVariable UUID id) {
         if (skillRepository.existsById(id)) {
             skillRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok("Skill deleted successfully.");
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: Skill not found.");
         }
     }
 }
